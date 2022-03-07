@@ -1,0 +1,3 @@
+[submodule "universal_robot"]
+	path = universal_robot
+	url = https://github.com/bi3ri/universal_robot.git
