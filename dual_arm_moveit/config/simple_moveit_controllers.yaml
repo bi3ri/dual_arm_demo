@@ -1,0 +1,40 @@
+controller_list:
+  - name: rocket_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - rocket_shoulder_pan_joint
+      - rocket_shoulder_lift_joint
+      - rocket_elbow_joint
+      - rocket_wrist_1_joint
+      - rocket_wrist_2_joint
+      - rocket_wrist_3_joint
+  - name: groot_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - groot_shoulder_pan_joint
+      - groot_shoulder_lift_joint
+      - groot_elbow_joint
+      - groot_wrist_1_joint
+      - groot_wrist_2_joint
+      - groot_wrist_3_joint
+  - name: rocket_and_groot_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - groot_shoulder_pan_joint
+      - groot_shoulder_lift_joint
+      - groot_elbow_joint
+      - groot_wrist_1_joint
+      - groot_wrist_2_joint
+      - groot_wrist_3_joint
+      - rocket_shoulder_pan_joint
+      - rocket_shoulder_lift_joint
+      - rocket_elbow_joint
+      - rocket_wrist_1_joint
+      - rocket_wrist_2_joint
+      - rocket_wrist_3_joint

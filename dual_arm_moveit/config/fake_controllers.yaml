@@ -1,0 +1,39 @@
+controller_list:
+  - name: fake_rocket_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - rocket_shoulder_pan_joint
+      - rocket_shoulder_lift_joint
+      - rocket_elbow_joint
+      - rocket_wrist_1_joint
+      - rocket_wrist_2_joint
+      - rocket_wrist_3_joint
+  - name: fake_groot_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - groot_shoulder_pan_joint
+      - groot_shoulder_lift_joint
+      - groot_elbow_joint
+      - groot_wrist_1_joint
+      - groot_wrist_2_joint
+      - groot_wrist_3_joint
+  - name: fake_rocket_and_groot_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - groot_shoulder_pan_joint
+      - groot_shoulder_lift_joint
+      - groot_elbow_joint
+      - groot_wrist_1_joint
+      - groot_wrist_2_joint
+      - groot_wrist_3_joint
+      - rocket_shoulder_pan_joint
+      - rocket_shoulder_lift_joint
+      - rocket_elbow_joint
+      - rocket_wrist_1_joint
+      - rocket_wrist_2_joint
+      - rocket_wrist_3_joint
+initial:  # Define initial robot poses per group
+#  - group: rocket
+#    pose: home
+
+  []

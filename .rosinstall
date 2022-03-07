@@ -1,0 +1,4 @@
+- git:
+    local-name: universal_robot
+    uri: https://github.com/bi3ri/universal_robot.git
+    version: melodic-devel-staging

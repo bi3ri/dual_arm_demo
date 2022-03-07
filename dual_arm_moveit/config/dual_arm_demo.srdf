@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="dual_arm_demo">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="rocket">
+        <joint name="rocket_shoulder_pan_joint"/>
+        <joint name="rocket_shoulder_lift_joint"/>
+        <joint name="rocket_elbow_joint"/>
+        <joint name="rocket_wrist_1_joint"/>
+        <joint name="rocket_wrist_2_joint"/>
+        <joint name="rocket_wrist_3_joint"/>
+        <chain base_link="rocket_base_link" tip_link="rocket_tool0"/>
+    </group>
+    <group name="groot">
+        <joint name="groot_shoulder_pan_joint"/>
+        <joint name="groot_shoulder_lift_joint"/>
+        <joint name="groot_elbow_joint"/>
+        <joint name="groot_wrist_1_joint"/>
+        <joint name="groot_wrist_2_joint"/>
+        <joint name="groot_wrist_3_joint"/>
+        <chain base_link="groot_base_link" tip_link="groot_tool0"/>
+    </group>
+    <group name="rocket_and_groot">
+        <group name="rocket"/>
+        <group name="groot"/>
+    </group>
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="world_rocket" type="fixed" parent_frame="world" child_link="rocket_base_link"/>
+    <virtual_joint name="world_groot" type="fixed" parent_frame="world" child_link="groot_base_link"/>
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="groot_base_link_inertia" link2="groot_shoulder_link" reason="Adjacent"/>
+    <disable_collisions link1="groot_base_link_inertia" link2="rocket_base_link_inertia" reason="Adjacent"/>
+    <disable_collisions link1="groot_base_link_inertia" link2="rocket_forearm_link" reason="Never"/>
+    <disable_collisions link1="groot_base_link_inertia" link2="rocket_shoulder_link" reason="Never"/>
+    <disable_collisions link1="groot_base_link_inertia" link2="rocket_upper_arm_link" reason="Never"/>
+    <disable_collisions link1="groot_base_link_inertia" link2="rocket_wrist_1_link" reason="Never"/>
+    <disable_collisions link1="groot_base_link_inertia" link2="rocket_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="groot_base_link_inertia" link2="rocket_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="groot_forearm_link" link2="groot_upper_arm_link" reason="Adjacent"/>
+    <disable_collisions link1="groot_forearm_link" link2="groot_wrist_1_link" reason="Adjacent"/>
+    <disable_collisions link1="groot_forearm_link" link2="groot_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="groot_forearm_link" link2="rocket_base_link_inertia" reason="Never"/>
+    <disable_collisions link1="groot_forearm_link" link2="rocket_forearm_link" reason="Never"/>
+    <disable_collisions link1="groot_forearm_link" link2="rocket_shoulder_link" reason="Never"/>
+    <disable_collisions link1="groot_forearm_link" link2="rocket_upper_arm_link" reason="Never"/>
+    <disable_collisions link1="groot_forearm_link" link2="rocket_wrist_1_link" reason="Never"/>
+    <disable_collisions link1="groot_forearm_link" link2="rocket_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="groot_forearm_link" link2="rocket_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="groot_shoulder_link" link2="groot_upper_arm_link" reason="Adjacent"/>
+    <disable_collisions link1="groot_shoulder_link" link2="rocket_base_link_inertia" reason="Never"/>
+    <disable_collisions link1="groot_shoulder_link" link2="rocket_forearm_link" reason="Never"/>
+    <disable_collisions link1="groot_shoulder_link" link2="rocket_shoulder_link" reason="Never"/>
+    <disable_collisions link1="groot_shoulder_link" link2="rocket_upper_arm_link" reason="Never"/>
+    <disable_collisions link1="groot_shoulder_link" link2="rocket_wrist_1_link" reason="Never"/>
+    <disable_collisions link1="groot_shoulder_link" link2="rocket_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="groot_shoulder_link" link2="rocket_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="groot_upper_arm_link" link2="rocket_base_link_inertia" reason="Never"/>
+    <disable_collisions link1="groot_upper_arm_link" link2="rocket_forearm_link" reason="Never"/>
+    <disable_collisions link1="groot_upper_arm_link" link2="rocket_shoulder_link" reason="Never"/>
+    <disable_collisions link1="groot_upper_arm_link" link2="rocket_upper_arm_link" reason="Never"/>
+    <disable_collisions link1="groot_upper_arm_link" link2="rocket_wrist_1_link" reason="Never"/>
+    <disable_collisions link1="groot_upper_arm_link" link2="rocket_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="groot_upper_arm_link" link2="rocket_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="groot_wrist_2_link" reason="Adjacent"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="groot_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="rocket_base_link_inertia" reason="Never"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="rocket_forearm_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="rocket_shoulder_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="rocket_upper_arm_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="rocket_wrist_1_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="rocket_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_1_link" link2="rocket_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_2_link" link2="groot_wrist_3_link" reason="Adjacent"/>
+    <disable_collisions link1="groot_wrist_2_link" link2="rocket_base_link_inertia" reason="Never"/>
+    <disable_collisions link1="groot_wrist_2_link" link2="rocket_forearm_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_2_link" link2="rocket_shoulder_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_2_link" link2="rocket_upper_arm_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_2_link" link2="rocket_wrist_1_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_2_link" link2="rocket_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_2_link" link2="rocket_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_3_link" link2="rocket_base_link_inertia" reason="Never"/>
+    <disable_collisions link1="groot_wrist_3_link" link2="rocket_forearm_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_3_link" link2="rocket_shoulder_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_3_link" link2="rocket_upper_arm_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_3_link" link2="rocket_wrist_1_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_3_link" link2="rocket_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="groot_wrist_3_link" link2="rocket_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="rocket_base_link_inertia" link2="rocket_shoulder_link" reason="Adjacent"/>
+    <disable_collisions link1="rocket_forearm_link" link2="rocket_upper_arm_link" reason="Adjacent"/>
+    <disable_collisions link1="rocket_forearm_link" link2="rocket_wrist_1_link" reason="Adjacent"/>
+    <disable_collisions link1="rocket_forearm_link" link2="rocket_wrist_2_link" reason="Never"/>
+    <disable_collisions link1="rocket_shoulder_link" link2="rocket_upper_arm_link" reason="Adjacent"/>
+    <disable_collisions link1="rocket_wrist_1_link" link2="rocket_wrist_2_link" reason="Adjacent"/>
+    <disable_collisions link1="rocket_wrist_1_link" link2="rocket_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="rocket_wrist_2_link" link2="rocket_wrist_3_link" reason="Adjacent"/>
+</robot>

@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: dual_arm_demo
+    relative_path: urdf/dual_arm_scene.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/dual_arm_demo.srdf
+  CONFIG:
+    author_name: bi3ri
+    author_email: b3ri@gmx.de
+    generated_timestamp: 1646673863

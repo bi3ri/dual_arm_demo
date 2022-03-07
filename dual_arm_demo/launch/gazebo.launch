@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="limited" default="false"/>
+  <arg name="paused" default="true"/>
+  <arg name="gui" default="true"/>
+
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" default="worlds/empty.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="verbose" value="true"/>
+  </include>
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <!-- Initial pose modified on 9 July 2018 -->
+  <!-- Do not change this without updating the home pose in ereal_base_scene.srdf accordingly. -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" 
+        args="-urdf -param robot_description -model ereal_model 
+        -J rocket_elbow_joint 1.4      -J rocket_shoulder_lift_joint -2.1  -J rocket_shoulder_pan_joint 1.57 
+        -J rocket_wrist_1_joint -0.85  -J rocket_wrist_2_joint -1.57       -J rocket_wrist_3_joint 0
+        -J groot_elbow_joint 1.4      -J groot_shoulder_lift_joint -2.1  -J groot_shoulder_pan_joint 1.57 
+        -J groot_wrist_1_joint -0.85  -J groot_wrist_2_joint -1.57       -J groot_wrist_3_joint 0
+        -unpause" respawn="false" output="screen" />
+  <include file="$(find ereal_gazebo)/launch/controller_utils.launch"/>
+
+  <!-- spawn controllers -->
+  <rosparam file="$(find ereal_gazebo)/controller/robot_controllers.yaml" command="load"/>
+  <node name="rocket_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn rocket_controller" respawn="false" output="screen"/>
+  <node name="groot_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn groot_controller" respawn="false" output="screen"/>
+
+</launch>
