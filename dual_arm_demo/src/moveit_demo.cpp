@@ -16,29 +16,15 @@
 
 int main(int argc, char** argv)
 {
-
   ros::init(argc, argv, "moveit_demo");
-  // ros::NodeHandle nh("~");
-
-  // ros::NodeHandle nodeHandlePlanningPipeline("/move_group");
-  ros::NodeHandle nodeHandlePlanningPipeline("~");
 
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  ros::Rate* loop_rate_ = new ros::Rate(0.2);
 
-  // BEGIN_TUTORIAL
-  //
-  // Setup
-  // ^^^^^
-  //
   static const std::string PLANNING_GROUP = "rocket_and_groot";
-  static const std::string LOGNAME = "moveit_demo";
 
-  /* Otherwise robot with zeros joint_states */
-  ros::Duration(1.0).sleep();
-
-  // auto moveit_cpp_ptr = std::make_shared<moveit_cpp::MoveItCpp>(nodeHandlePlanningPipeline);
+  // ros::NodeHandle nodeHandle("/move_group");
+  // auto moveit_cpp_ptr = std::make_shared<moveit_cpp::MoveItCpp>(nodeHandle);
   // moveit_cpp_ptr->getPlanningSceneMonitor()->providePlanningSceneService();
   // auto planning_components = std::make_shared<moveit_cpp::PlanningComponent>(PLANNING_GROUP, moveit_cpp_ptr);
   // auto robot_model_ptr = moveit_cpp_ptr->getRobotModel();
@@ -52,9 +38,6 @@ int main(int argc, char** argv)
   group.setPlannerId("RRTConnectkConfigDefault");
   // group.setEndEffectorLink("groot_tool0");
   // group.setEndEffectorLink("rocket_tool0");
-
-  moveit::planning_interface::MoveItErrorCode success_plan = moveit_msgs::MoveItErrorCodes::FAILURE, 
-  motion_done = moveit_msgs::MoveItErrorCodes::FAILURE;
 
   geometry_msgs::PoseStamped rocket_pose_goal;
   geometry_msgs::PoseStamped groot_pose_goal;
@@ -79,10 +62,11 @@ int main(int argc, char** argv)
   groot_pose.orientation.z = -0.011505315872495573;
   groot_pose.orientation.w = 0.006289198740942946;
 
+  group.clearPoseTargets();
   group.setStartStateToCurrentState();
   group.setPoseTarget(rocket_pose, "rocket_tool0");
   group.setPoseTarget(groot_pose, "groot_tool0");
-  success_plan = group.plan(myplan);
+  auto success_plan = group.plan(myplan);
   group.execute(myplan);
 
   // rocket_pose_goal.pose = rocket_pose;
