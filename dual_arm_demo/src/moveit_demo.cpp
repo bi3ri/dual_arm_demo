@@ -32,9 +32,9 @@ int main(int argc, char** argv)
   // auto joint_model_group_ptr = robot_model_ptr->getJointModelGroup(PLANNING_GROUP);
 
   // Create MoveGroup
-  moveit::planning_interface::MoveGroupInterface group("rocket_and_groot");
+  moveit::planning_interface::MoveGroupInterface group("rocket");
   moveit::planning_interface::MoveGroupInterface::Plan myplan;
-  group.setPlanningTime(0.5);
+  group.setPlanningTime(1.5);
   group.setPlannerId("RRTConnectkConfigDefault");
   // group.setEndEffectorLink("groot_tool0");
   // group.setEndEffectorLink("rocket_tool0");
@@ -63,9 +63,10 @@ int main(int argc, char** argv)
   groot_pose.orientation.w = 0.006289198740942946;
 
   group.clearPoseTargets();
+  // group.stop();
   group.setStartStateToCurrentState();
   group.setPoseTarget(rocket_pose, "rocket_tool0");
-  group.setPoseTarget(groot_pose, "groot_tool0");
+  // group.setPoseTarget(groot_pose, "groot_tool0");
   auto success_plan = group.plan(myplan);
   group.execute(myplan);
 
