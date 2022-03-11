@@ -1,4 +1,4 @@
-# dual_arm_moveit
+# dual_arm_demo
 
 ![dual arm](https://github.com/bi3ri/dual_arm_demo/blob/main/dual_arm_demo.gif?raw=true)
 
