@@ -1,5 +1,9 @@
 # dual_arm_moveit
 
+![dual arm](https://github.com/bi3ri/dual_arm_demo/blob/main/dual_arm.gif?raw=true)
+
+Small demo project planning an executing random poses for two UR robots simultaneously. 
+
 ## Installation
 ```bash
 mkdir -p ~/dual_arm_ws/src
