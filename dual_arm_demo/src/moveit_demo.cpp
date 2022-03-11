@@ -28,8 +28,8 @@ int main(int argc, char** argv)
 
   rng_group_interface.setMaxVelocityScalingFactor(1.0);
   rng_group_interface.setMaxAccelerationScalingFactor(1.0);
-  rng_group_interface.setPlanningTime(10.0);
-  rng_group_interface.setNumPlanningAttempts(10.0);
+  rng_group_interface.setPlanningTime(15.0);
+  rng_group_interface.setNumPlanningAttempts(20.0);
   
   moveit::core::RobotModelConstPtr kinematic_model = rocket_group_interface.getRobotModel();
   moveit::core::RobotStatePtr kinematic_state = rng_group_interface.getCurrentState();
@@ -44,12 +44,10 @@ int main(int argc, char** argv)
   std::random_device rd; 
   std::mt19937 gen(rd()); 
   std::uniform_int_distribution<> distr(-10, 10);
-  std::uniform_int_distribution<> rad_distr(-50, 50);
+  std::uniform_int_distribution<> rad_distr(-30, 30);
 
   geometry_msgs::Pose rocket_pose;
   geometry_msgs::Pose groot_pose;
-  rocket_pose_goal.header.frame_id = "world";
-  groot_pose_goal.header.frame_id = "world";
  
   // w x y z
   Eigen::Quaternionf rocket_q = Eigen::Quaternionf(0.0044319521005895665 , -0.0018064082028716572, 0.714190127940822, -0.6999353940485185);
