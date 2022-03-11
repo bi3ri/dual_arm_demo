@@ -1,81 +1,125 @@
 #include <ros/ros.h>
 #include <memory>
-// MoveitCpp
 #include <moveit/moveit_cpp/moveit_cpp.h>
 #include <moveit/moveit_cpp/planning_component.h>
 #include <moveit/robot_state/conversions.h>
 
 #include <geometry_msgs/PointStamped.h>
 
-
+#include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit/move_group_interface/move_group_interface.h>
 
-
 #include <stdlib.h>
-
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+#include <random>
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "moveit_demo");
 
-  ros::AsyncSpinner spinner(1);
+  ros::AsyncSpinner spinner(8);
   spinner.start();
 
-  static const std::string PLANNING_GROUP = "rocket_and_groot";
+  std::vector<double> joint_values;
+  moveit::planning_interface::MoveGroupInterface rng_group_interface("rocket_and_groot");
+  moveit::planning_interface::MoveGroupInterface rocket_group_interface("rocket");
+  moveit::planning_interface::MoveGroupInterface groot_group_interface("groot");
 
-  // ros::NodeHandle nodeHandle("/move_group");
-  // auto moveit_cpp_ptr = std::make_shared<moveit_cpp::MoveItCpp>(nodeHandle);
-  // moveit_cpp_ptr->getPlanningSceneMonitor()->providePlanningSceneService();
-  // auto planning_components = std::make_shared<moveit_cpp::PlanningComponent>(PLANNING_GROUP, moveit_cpp_ptr);
-  // auto robot_model_ptr = moveit_cpp_ptr->getRobotModel();
-  // auto robot_start_state = planning_components->getStartState();
-  // auto joint_model_group_ptr = robot_model_ptr->getJointModelGroup(PLANNING_GROUP);
+  rng_group_interface.setMaxVelocityScalingFactor(1.0);
+  rng_group_interface.setMaxAccelerationScalingFactor(1.0);
+  rng_group_interface.setPlanningTime(10.0);
+  rng_group_interface.setNumPlanningAttempts(10.0);
+  
+  moveit::core::RobotModelConstPtr kinematic_model = rocket_group_interface.getRobotModel();
+  moveit::core::RobotStatePtr kinematic_state = rng_group_interface.getCurrentState();
+  const moveit::core::JointModelGroup* rocket_joint_model_group = kinematic_model->getJointModelGroup("rocket");
+  const moveit::core::JointModelGroup* groot_joint_model_group = kinematic_model->getJointModelGroup("groot");
 
-  // Create MoveGroup
-  moveit::planning_interface::MoveGroupInterface group("rocket");
-  moveit::planning_interface::MoveGroupInterface::Plan myplan;
-  group.setPlanningTime(1.5);
-  group.setPlannerId("RRTConnectkConfigDefault");
-  // group.setEndEffectorLink("groot_tool0");
-  // group.setEndEffectorLink("rocket_tool0");
+  const std::vector<std::string>& rocket_joint_names = rocket_joint_model_group->getVariableNames();
+  const std::vector<std::string>& groot_joint_names = groot_joint_model_group->getVariableNames();
+  std::vector<double> rocket_joint_values;
+  std::vector<double> groot_joint_values;
 
-  geometry_msgs::PoseStamped rocket_pose_goal;
-  geometry_msgs::PoseStamped groot_pose_goal;
+  std::random_device rd; 
+  std::mt19937 gen(rd()); 
+  std::uniform_int_distribution<> distr(-10, 10);
+  std::uniform_int_distribution<> rad_distr(-50, 50);
+
   geometry_msgs::Pose rocket_pose;
   geometry_msgs::Pose groot_pose;
   rocket_pose_goal.header.frame_id = "world";
   groot_pose_goal.header.frame_id = "world";
  
-  rocket_pose.position.x = 0.0;
-  rocket_pose.position.y = 0.8;
-  rocket_pose.position.z = 1.4;
-  rocket_pose.orientation.x = 0.7082493155730533;
-  rocket_pose.orientation.y = 0.7058456228553038;
-  rocket_pose.orientation.z = 0.006125141443269484;
-  rocket_pose.orientation.w = 0.011284783055502262;
- 
-  groot_pose.position.x = 0.0;
-  groot_pose.position.y = -0.8;
-  groot_pose.position.z = 1.4;
-  groot_pose.orientation.x = 0.7060029188906415;
-  groot_pose.orientation.y = -0.7080875314562214;
-  groot_pose.orientation.z = -0.011505315872495573;
-  groot_pose.orientation.w = 0.006289198740942946;
+  // w x y z
+  Eigen::Quaternionf rocket_q = Eigen::Quaternionf(0.0044319521005895665 , -0.0018064082028716572, 0.714190127940822, -0.6999353940485185);
+  Eigen::Quaternionf groot_q = Eigen::Quaternionf(0.7171097271676862 , -0.6959453209354478, -0.029260144371181365, -0.02361341612136324);
 
-  group.clearPoseTargets();
-  // group.stop();
-  group.setStartStateToCurrentState();
-  group.setPoseTarget(rocket_pose, "rocket_tool0");
-  // group.setPoseTarget(groot_pose, "groot_tool0");
-  auto success_plan = group.plan(myplan);
-  group.execute(myplan);
+  for(int i; i < 100; i++){
 
-  // rocket_pose_goal.pose = rocket_pose;
-  // groot_pose_goal.pose = groot_pose;
-  // planning_components->setGoal(groot_pose_goal, "groot_tool0");
-  // planning_components->setGoal(rocket_pose_goal, "rocket_tool0");
-  // auto plan_solution1 = planning_components->plan();
-  // planning_components->execute();
+    float random_x = ( ((float) distr(gen)) * 0.01);
+    float random_y = ( ((float) distr(gen)) * 0.01);
+    float random_z = ( ((float) distr(gen)) * 0.01);
+
+    rocket_pose.position.x = -0.015463195119993365 + random_x;
+    rocket_pose.position.y = 0.02029402510664674 + random_y;
+    rocket_pose.position.z = 1.658157440477098 + random_z;
+    groot_pose.position.x = -0.01565011581780207 + random_x;
+    groot_pose.position.y = -0.019683543216663102 + random_y;
+    groot_pose.position.z = 1.657396455658871 + random_z;
+
+    float x_rotation = rad_distr(gen) * 0.01;
+    float y_rotation = rad_distr(gen) * 0.01;
+    float z_rotation = rad_distr(gen) * 0.01;
+
+    rocket_q = Eigen::AngleAxisf(x_rotation, Eigen::Vector3f::UnitX()) *
+                Eigen::AngleAxisf(y_rotation, Eigen::Vector3f::UnitY()) *
+                Eigen::AngleAxisf(z_rotation, Eigen::Vector3f::UnitZ()) *
+                rocket_q;
+
+    groot_q = Eigen::AngleAxisf(x_rotation, Eigen::Vector3f::UnitX()) *
+                Eigen::AngleAxisf(y_rotation, Eigen::Vector3f::UnitY()) *
+                Eigen::AngleAxisf(z_rotation, Eigen::Vector3f::UnitZ()) *
+                groot_q;
+
+    rocket_pose.orientation.w = rocket_q.w();
+    rocket_pose.orientation.x = rocket_q.x();
+    rocket_pose.orientation.y = rocket_q.y();
+    rocket_pose.orientation.z = rocket_q.z();
+    groot_pose.orientation.w = groot_q.w();
+    groot_pose.orientation.x = groot_q.x();
+    groot_pose.orientation.y = groot_q.y();
+    groot_pose.orientation.z = groot_q.z();
+
+    double timeout = 0.1;
+    bool rocket_found_ik = kinematic_state->setFromIK(rocket_joint_model_group, rocket_pose, timeout);
+    bool groot_found_ik = kinematic_state->setFromIK(groot_joint_model_group, groot_pose, timeout);
+
+    if (rocket_found_ik && groot_found_ik)
+    {
+      kinematic_state->copyJointGroupPositions(rocket_joint_model_group, rocket_joint_values);
+      kinematic_state->copyJointGroupPositions(groot_joint_model_group, groot_joint_values);
+
+      for (std::size_t i = 0; i < rocket_joint_names.size(); ++i)
+      {
+        ROS_INFO("Joint %s: %f", rocket_joint_names[i].c_str(), rocket_joint_values[i]);
+        ROS_INFO("Joint %s: %f", groot_joint_names[i].c_str(), groot_joint_values[i]);
+      }
+    }
+    else
+    {
+      ROS_INFO("Did not find IK solution");
+    }
+    rng_group_interface.setJointValueTarget(rocket_joint_names, rocket_joint_values);
+    rng_group_interface.setJointValueTarget(groot_joint_names, groot_joint_values);
+
+    moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+    bool success = (rng_group_interface.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    if(!success){
+      ROS_INFO("Plan did not successed");
+    }
+    rng_group_interface.execute(my_plan);
+  }
 
   ros::shutdown();
 }

@@ -5,13 +5,15 @@
         <arg name="moveit_controller_manager" value="ros_control" />
         <arg name="fake_execution_type" value="interpolate" />
         <arg name="info" value="true" />
-        <arg name="debug" value="true" />
+        <arg name="debug" value="false" />
         <arg name="pipeline" value="ompl" />
         <arg name="load_robot_description" value="true" />
       </include>
 
     <include file="$(dirname)/gazebo.launch" />
 
-    <include file="$(find dual_arm_moveit)/launch/moveit_rviz.launch" />
+    <include file="$(find dual_arm_moveit)/launch/moveit_rviz.launch" >
+      <arg name="rviz_config" value="$(find dual_arm_moveit)/launch/moveit.rviz"/>
+    </include>
 
 </launch>

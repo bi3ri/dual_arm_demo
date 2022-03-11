@@ -5,12 +5,12 @@
 
     <link name="world" />
 
-    <xacro:rocket parent="world" >
-        <origin xyz="0 1 1" rpy="0 0 0" />
+    <xacro:rocket parent="world">
+        <origin xyz="0 0.5 1" rpy="0 0 0" />
     </xacro:rocket>
 
-    <xacro:groot parent="world" >
-        <origin xyz="0 -1 1" rpy="0 0 0" />
+    <xacro:groot parent="world">
+        <origin xyz="0 -0.5 1" rpy="0 0 0" />
     </xacro:groot>
 
 </robot> 
