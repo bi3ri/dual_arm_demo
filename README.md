@@ -4,6 +4,8 @@
 
 Small demo project planning and executing random poses for two UR robots simultaneously. 
 
+Tested successfully under noetic.
+
 ## Installation
 ```bash
 mkdir -p ~/dual_arm_ws/src
