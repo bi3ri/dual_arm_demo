@@ -2,7 +2,7 @@
 
 ![dual arm](https://github.com/bi3ri/dual_arm_demo/blob/main/dual_arm_demo.gif?raw=true)
 
-Small demo project planning an executing random poses for two UR robots simultaneously. 
+Small demo project planning and executing random poses for two UR robots simultaneously. 
 
 ## Installation
 ```bash
